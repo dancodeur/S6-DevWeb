@@ -36,3 +36,15 @@ export const fetchAbilityData = async (url) => {
     }
 }
 
+export const fetchPokemonCry = async (pkmnId) => {
+    try {
+        const latestCryUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pkmnId}.ogg`;
+        const legacyCryUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/${pkmnId}.ogg`;
+        return {
+            latest: latestCryUrl,
+            legacy: legacyCryUrl
+        };
+    } catch (error) {
+        throw new Error(error);
+    }
+};
