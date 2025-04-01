@@ -256,7 +256,7 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
                 index <= fetchPriorityHighThreshold ? "high" : "low";
 
             const pkmnNameContainer = clone.querySelector("[data-pkmn-name]")
-            pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr}`;
+            pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr} \n ${item.name.en} \n ${item.name.jp}`;
 
             const aTag = clone.querySelector("[data-pokemon-data]");
             aTag.href = url;
