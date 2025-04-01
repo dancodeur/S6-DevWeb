@@ -335,6 +335,11 @@ export const observeURL = async () => {
 
             await loadPokemonData(pkmnData);
             modal.showModal();
+            
+            for(let i=2; i<=pkmnData.generation; i++) {
+                await loadPokedexForGeneration(i);
+            }
+
         } catch (_e) {
             modal.close();
             errorMessageContainer.textContent = `Le Pokémon avec l'id "${pkmnId}" n'existe pas`;
