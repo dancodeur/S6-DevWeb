@@ -61,7 +61,12 @@
                 Charger la génération suivante
             </button>
         </footer>
-
+        <div class="mt-10 mb-3 text-center">
+            <p>Réalisé par Ornella MOTENGO BAUTI, Rosalie NICAUD et Dan ELENGA - 
+        <a class="hocus:underline" href="">Crédits
+        </a>
+        </p>
+        </div>
         <template data-tpl-id="generation-shortcut-link">
             <li>
                 <button class="px-1 py-2 hocus:scale-125 transition-transform">
@@ -224,8 +229,9 @@
                         <div class="w-20">
                             <img data-sprite src="/images/loading.svg" alt="" fetchpriority="high" />
                         </div>
-                        <div class="grow">
+                        <div class="grow relative">
                             <h2 class="text-2xl font-bold"></h2>
+                            <a data-external-link-btn class="absolute bottom-0 right-0 py-1 px-2 rounded-md transition-colors hocus:bg-white hocus:text-black border border-black border-solid bg-slate-950 text-white ease-outblock z-10" target="_blank">En savoir plus</a>
                             <p data-category class="text-sm -mt-1"></p>
                             <div class="@container">
                                 <ul data-list-types class="flex gap-1 mt-2 flex-col @[10rem]:flex-row"></ul>
@@ -361,13 +367,20 @@
                         data-list-games=""
                     ></ul>
                 </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Spectre audio du cri
+                    </summary>
+                    <div data-spectre-cry id="waveform"></div>                    
+                    <button class="mt-3 rounded-md py-1 px-2 transition-colors hocus:bg-white hocus:text-black border border-black border-solid bg-slate-950 text-white ease-out cursor-pointer" id="play-cry">Play</button>
+                </details>
             </div>
             <nav class="text-black">
                 <ul class="my-3 px-4 py-3 flex flex-col sm:flex-row gap-6 justify-center" data-list-siblings-pokemon>
                 </ul>
             </nav>
 
-            <footer class="bottom-0 modal-footer sticky pt-1 pb-4 text-black">
+            <footer class="relative z-50 bottom-0 modal-footer sticky pt-1 pb-4 text-black">
                 <div class="px-4">
                     <button
                         data-close-modal=""

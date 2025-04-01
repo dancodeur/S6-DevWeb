@@ -7,6 +7,7 @@ import {
     fetchPokemon,
     fetchEvolutionChain,
     fetchAbilityData,
+    fetchPokemonCry,
 } from "#api";
 
 import {
@@ -35,6 +36,7 @@ import modalPulldownClose from "#src/modal-pulldown-close.js"
 import { listPokemon, setTitleTagForGeneration, hasReachPokedexEnd, rippleEffect } from "./main";
 import loadingImage from "/images/loading.svg";
 import loadingImageRaw from "/images/loading.svg?raw";
+import WaveSurfer from 'wavesurfer.js';
 
 const closeModalBtn = document.querySelector("[data-close-modal]");
 const modal = document.querySelector("[data-pokemon-modal]");
@@ -96,7 +98,9 @@ const modal_DOM = {
     catchRate: modal.querySelector("[data-catch-rate]"),
     acronymVersions: modal.querySelector("[data-pkmn-acronym-versions]"),
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
-};
+    externalLinkBtn: modal.querySelector("[data-external-link-btn]"),
+    spectreCry: modal.querySelector("[data-spectre-cry]"),
+}; 
 
 const dataCache = {};
 let listAbilitiesCache = [];
@@ -264,7 +268,7 @@ displayModal = async (pkmnData) => {
     modal_DOM.img.src = loadingImage;
 
     const pkmnId = pkmnData?.alternate_form_id || pkmnData.pokedex_id;
-
+   
     let pkmnExtraData = dataCache[pkmnId]?.extras;
     let listDescriptions = dataCache[pkmnId]?.descriptions;
     let evolutionLine = dataCache[pkmnId]?.evolutionLine;
@@ -340,6 +344,64 @@ displayModal = async (pkmnData) => {
             listAbilities,
         };
     }
+
+    //spectre audio
+    const container = modal_DOM.spectreCry;
+
+    if (!container) {
+        console.error("Élément du spectre audio introuvable dans le DOM.");
+        return;
+    }
+
+    const pokemonId = pkmnData.pokedex_id;
+
+    if (!pokemonId) {
+        console.error('ID du Pokémon introuvable.');
+        return;
+    }
+
+    (async () => {
+        try {
+            // Récupération des URLs des cries Pokémon
+            const { latest, legacy } = await fetchPokemonCry(pokemonId);
+            const audioUrl = latest || legacy;
+
+            if (!audioUrl) {
+                console.error("URL audio introuvable pour ce Pokémon.");
+                return;
+            }
+            console.log("URL audio utilisée :", audioUrl);
+            container.innerHTML = '';
+
+            const wavesurfer = WaveSurfer.create({
+                container,
+                waveColor: 'violet',
+                progressColor: 'purple',
+                barWidth: 3,
+                responsive: true,
+                height: 100,
+            });
+
+            wavesurfer.load(audioUrl);
+
+            // Gestion du bouton Play
+            const playButton = document.getElementById('play-cry');
+            if (playButton) {
+                playButton.replaceWith(playButton.cloneNode(true)); 
+                document.getElementById('play-cry').addEventListener('click', () => {
+                    wavesurfer.playPause();
+                });
+            } else {
+                console.error("Bouton 'Play' introuvable.");
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement du cri du Pokémon :', error);
+        }
+    })();
+
+
+    //Button pokepedia
+    modal_DOM.externalLinkBtn.href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
 
     modal.style.setProperty("--background-sprite", `url("${pkmnExtraData.sprites.other["official-artwork"].front_default}")`);
     replaceImage(modal_DOM.img, pkmnData.sprites.regular);
