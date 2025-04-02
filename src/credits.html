@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Crédits</title>
+    <meta name="theme-color" content="#0f172a" />
+    <link data-favicon rel="shortcut icon" href="/favicon.png" type="image/png">
+    <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+    <div role="alert" id="no-generation-banner" popover data-error-popover tabindex="-1" class="bg-amber-400 p-4 mt-11 border border-amber-800 rounded-lg mx-auto error-banner">
+        <div class="flex items-center justify-center gap-3">
+            <p data-error-message></p>
+            <button popovertarget="no-generation-banner" type="button" class="shrink-0 inline-flex justify-center w-7 h-7 items-center text-amber-900 hocus:bg-amber-800 hocus:text-gray-100 rounded-lg text-sm p-1.5 ">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Cacher bannière</span>
+            </button>
+        </div>
+    </div>
+    <header class="py-2 bg-slate-900 text-white">
+        <div class="mr-[max(env(safe-area-inset-right),_theme(space.3))] ml-[max(env(safe-area-inset-left),_theme(space.3))]">
+            <div class="mx-auto max-w-6xl flex justify-between items-center">
+                <h1 class="text-white">Pokédex v%VERSION% - TP CI/CD</h1>
+                <a class="text-white hocus:underline" href="index.html">Retour au Pokédex</a>
+            </div>
+        </div>
+    </header>
+    <main class="py-10">
+        <div class="max-w-5xl mx-auto px-4">
+            <p class="text-4xl font-bold text-center mb-8">Ressources externes</p>
+            <div class="flex justify-center items-center mt-20">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-30">
+                    <div>
+                        <p class="text-3xl font-semibold mb-4 text-slate-800">API</p>
+                        <ul class="space-y-2">
+                            <li><a class="hocus:underline text-blue-600" href="https://tyradex.vercel.app/" target="_blank">PokéAPI</a></li>
+                            <li><a class="hocus:underline text-blue-600" href="https://pokeapi.co/" target="_blank">Tyradex</a></li>
+                            <li><a class="hocus:underline text-blue-600" href="https://tcgdex.dev/" target="_blank">TCGdex</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-semibold mb-4 text-slate-800">Icônes</p>
+                        <ul>
+                            <li><a class="hocus:underline text-blue-600" href="https://github.com/partywhale/pokemon-type-icons" target="_blank">Pokémon Type Icons</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="mt-60 mb-3 text-center">
+            <p>Réalisé par Ornella MOTENGO BAUTI, Rosalie NICAUD et Dan ELENGA - 
+        <a class="hocus:underline" href="credits.html">Crédits
+        </a>
+    </footer>
+</body>
+</html>
