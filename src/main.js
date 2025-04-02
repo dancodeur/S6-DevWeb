@@ -392,3 +392,10 @@ window.addEventListener("offline", () => {
 });
 
 export { loadPokedexForGeneration };
+
+//Responsive button info
+if (window.innerWidth > 1024) { 
+    document.querySelector('.desktop-version').style.display = 'block';
+  } else { 
+    document.querySelector('.mobile-version').style.display = 'block';
+  }

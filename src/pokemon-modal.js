@@ -98,7 +98,7 @@ const modal_DOM = {
     catchRate: modal.querySelector("[data-catch-rate]"),
     acronymVersions: modal.querySelector("[data-pkmn-acronym-versions]"),
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
-    externalLinkBtn: modal.querySelector("[data-external-link-btn]"),
+    // externalLinkBtn: modal.querySelector("[data-pokepedia-link-btn]"),
     spectreCry: modal.querySelector("[data-spectre-cry]"),
 }; 
 
@@ -401,7 +401,9 @@ displayModal = async (pkmnData) => {
 
 
     //Button pokepedia
-    modal_DOM.externalLinkBtn.href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
+    document.getElementById('mobile').href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
+    document.getElementById('desktop').href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
+      //modal_DOM.externalLinkBtn.href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
 
     modal.style.setProperty("--background-sprite", `url("${pkmnExtraData.sprites.other["official-artwork"].front_default}")`);
     replaceImage(modal_DOM.img, pkmnData.sprites.regular);
