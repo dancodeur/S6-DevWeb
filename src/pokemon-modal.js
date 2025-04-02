@@ -100,6 +100,7 @@ const modal_DOM = {
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
     // externalLinkBtn: modal.querySelector("[data-pokepedia-link-btn]"),
     spectreCry: modal.querySelector("[data-spectre-cry]"),
+    regionalNumbers: modal.querySelector("[data-regional-numbers]"),
 }; 
 
 const dataCache = {};
@@ -344,8 +345,9 @@ displayModal = async (pkmnData) => {
             listAbilities,
         };
     }
-
+    
     //spectre audio
+    clearTagContent(modal_DOM.spectreCry);
     const container = modal_DOM.spectreCry;
 
     if (!container) {
@@ -353,17 +355,10 @@ displayModal = async (pkmnData) => {
         return;
     }
 
-    const pokemonId = pkmnData.pokedex_id;
-
-    if (!pokemonId) {
-        console.error('ID du Pokémon introuvable.');
-        return;
-    }
-
     (async () => {
         try {
-            // Récupération des URLs des cries Pokémon
-            const { latest, legacy } = await fetchPokemonCry(pokemonId);
+            // Récupération des URL des cries Pokémon
+            const { latest, legacy } = await fetchPokemonCry(pkmnData.pokedex_id);
             const audioUrl = latest || legacy;
 
             if (!audioUrl) {
@@ -399,7 +394,46 @@ displayModal = async (pkmnData) => {
         }
     })();
 
+ //Numéros des régions 
+ const listNumbers = modal_DOM.regionalNumbers; 
 
+ if (!listNumbers) {
+     console.error("Élément du DOM pour les numéros régionaux introuvable.");
+     return;
+ }
+ 
+ (async () => {
+     try {
+         // Récupération des données du Pokémon depuis l'API
+         const pokemonSpeciesData = await fetchPokemonExternalData(pkmnData.pokedex_id);
+ 
+         // Vérification des numéros régionaux
+         const pokedexNumbers = pokemonSpeciesData.pokedex_numbers;
+         if (!pokedexNumbers || pokedexNumbers.length === 0) {
+             console.error("Aucun numéro régional trouvé pour ce Pokémon.");
+             return;
+         }
+
+ 
+         // Création de la liste des numéros régionaux
+         const list = document.createElement('ul');
+         list.style.padding = '0';
+         list.style.listStyleType = 'none';
+ 
+         pokedexNumbers.forEach(entry => {
+             const listItem = document.createElement('li');
+             listItem.textContent = `${entry.pokedex.name}: #${entry.entry_number}`;
+             listItem.style.margin = '5px 0';
+             list.appendChild(listItem);
+         });
+ 
+         // Ajout de la liste au conteneur
+         listNumbers.appendChild(list);
+     } catch (error) {
+         console.error(error);
+     }
+ })();
+ 
     //Button pokepedia
     document.getElementById('mobile').href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;
     document.getElementById('desktop').href = `https://www.pokepedia.fr/${encodeURIComponent(pkmnData.name.fr)}`;

@@ -36,6 +36,7 @@ export const fetchAbilityData = async (url) => {
     }
 }
 
+//Pokemon audio/cri
 export const fetchPokemonCry = async (pkmnId) => {
     try {
         const latestCryUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pkmnId}.ogg`;
