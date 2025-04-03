@@ -123,7 +123,7 @@ test("should indicate the right gen in the navigation shortcut", async ({
     page,
 }) => {
     await page.waitForResponse((resp) =>
-        resp.url().includes("https://tyradex.vercel.app/api/v1/gen/1")
+        resp.url().includes("https://tyradex.vercel.app/api/v1/gen/1"),{timeout:0}
     );
 
     const loadGenerationButton = await page
