@@ -101,6 +101,8 @@ const modal_DOM = {
     // externalLinkBtn: modal.querySelector("[data-pokepedia-link-btn]"),
     spectreCry: modal.querySelector("[data-spectre-cry]"),
     regionalNumbers: modal.querySelector("[data-regional-numbers]"),
+    nbNumbers: modal.querySelector("[data-nb-numbers]"),
+
 }; 
 
 const dataCache = {};
@@ -395,40 +397,42 @@ displayModal = async (pkmnData) => {
     })();
 
  //Numéros des régions 
- const listNumbers = modal_DOM.regionalNumbers; 
-
- if (!listNumbers) {
-     console.error("Élément du DOM pour les numéros régionaux introuvable.");
+ const listNumbers = modal_DOM.regionalNumbers;
+ const nbNumbersElement = modal_DOM.nbNumbers; 
+ 
+ if (!listNumbers || !nbNumbersElement) {
+     console.error("Élément du DOM introuvable pour les numéros régionaux.");
      return;
  }
  
  (async () => {
      try {
-         // Récupération des données du Pokémon depuis l'API
+         // Récupération des données du Pokémon depuis PokeAPI
          const pokemonSpeciesData = await fetchPokemonExternalData(pkmnData.pokedex_id);
  
-         // Vérification des numéros régionaux
          const pokedexNumbers = pokemonSpeciesData.pokedex_numbers;
          if (!pokedexNumbers || pokedexNumbers.length === 0) {
-             console.error("Aucun numéro régional trouvé pour ce Pokémon.");
+             nbNumbersElement.textContent = " (0)";
+             listNumbers.closest("details").inert = true;
              return;
          }
 
- 
-         // Création de la liste des numéros régionaux
-         const list = document.createElement('ul');
-         list.style.padding = '0';
-         list.style.listStyleType = 'none';
- 
+         //Nombre total d'éléments
+         nbNumbersElement.textContent = ` (${pokedexNumbers.length})`;
+         //Nettoyage des données 
+         listNumbers.innerHTML = "";
+
+         // Création de la liste des numéros en fonction des régions (region: #numero)
+         const list = document.createElement("div");
          pokedexNumbers.forEach(entry => {
-             const listItem = document.createElement('li');
+             const listItem = document.createElement("li");
              listItem.textContent = `${entry.pokedex.name}: #${entry.entry_number}`;
-             listItem.style.margin = '5px 0';
              list.appendChild(listItem);
          });
  
-         // Ajout de la liste au conteneur
+         // Ajout de la liste 
          listNumbers.appendChild(list);
+         listNumbers.closest("details").inert = false;
      } catch (error) {
          console.error(error);
      }
