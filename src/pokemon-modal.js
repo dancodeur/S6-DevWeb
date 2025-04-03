@@ -445,7 +445,7 @@ displayModal = async (pkmnData) => {
 
     modal.setAttribute("aria-labelledby", `Fiche détail de ${pkmnData.name.fr}`);
 
-    modal_DOM.pkmnName.textContent = `#${String(pkmnData.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmnData.name.fr} - ${pkmnData.name.en} - ${pkmnData.name.jp}`;
+    modal_DOM.pkmnName.textContent = `#${String(pkmnData.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmnData.name.fr} | ${pkmnData.name.en} | ${pkmnData.name.jp}`;
     document.title = `${modal_DOM.pkmnName.textContent} - ${initialPageTitle}`;
 
     if (listDescriptions?.is_legendary || listDescriptions?.is_mythical) {

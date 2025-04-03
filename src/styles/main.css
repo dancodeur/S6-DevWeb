@@ -599,6 +599,16 @@ details {
             animation: animate-in linear forwards, animate-out linear forwards;
             animation-timeline: view();
             animation-range: entry, exit;
+
+            [data-pkmn-types] {
+                display: block;
+            }
+        }
+
+        @container pokemon (width < theme(--container-xs)) {
+            [data-pkmn-types] {
+                display: none;
+            }
         }
     }
 }
