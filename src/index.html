@@ -275,6 +275,104 @@
                     class="bg-slate-300 border-b-slate-700 border-b-4 border-solid px-2 py-1 hidden w-full rounded-md">
                     <p>Asexué</p>
                 </div>
+            </header>
+            <div class="px-4 text-black">
+                <details>
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Descriptions
+                    </summary>
+                    <dl></dl>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Statistiques de base
+                    </summary>
+                    <div data-statistics="" class="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative -z-10"></div>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Évolution
+                    </summary>
+                    <p class="hidden" data-no-evolutions>Ce Pokémon n'a pas d'évolutions</p>
+                    <ul data-list-evolutions></ul>
+                    <div data-extra-evolutions class="mt-6">
+                        <p class="text-center">
+                            <span class="py-0.5 px-1.5 whitespace-nowrap bg-slate-900 text-white rounded-md mega-evolution align-super font-normal type-name">Méga-évolution(s)</span>
+                        </p>
+                        <p class="text-center">▼</p>
+                        <ul class="grid" style="grid-template-columns: repeat(auto-fit, minmax(25%, 1fr))"></ul>
+                    </div>
+                    <div data-pkmn-acronym-versions>
+                        <p class="font-bold">Notes</p>
+                        <ul class="list-disc list-outside px-4">
+                            <li data-acronym="rse">RSE : (Pokémon) Rubis / Saphir / Émeraude</li>
+                            <li data-acronym="nb">NB : (Pokémon) Noir / Blanc</li>
+                            <li data-acronym="n2b2">N2B2 : (Pokémon) Noir 2 / Blanc 2</li>
+                            <li data-acronym="rosa">ROSA : (Pokémon) Rubis Oméga / Saphir Alpha</li>
+                            <li data-acronym="rosa">SL : (Pokémon) Soleil / Lune</li>
+                            <li data-acronym="usul">USUL : (Pokémon) Ultra-Soleil / Ultra-Lune</li>
+                            <li data-acronym="deps">DEPS : (Pokémon) Diamant Écarlate / Perle Scintillante</li>
+                            <li data-acronym="eb">EB : (Pokémon) Épée / Bouclier</li>
+                            <li data-acronym="pla">PLA : Pokémon Légendes Arceus</li>
+                        </ul>
+                    </div>
+                </details>
+                <details class="mt-3 max-w @container/sensibilities">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Sensibilités
+                    </summary>
+                    <ul
+                        class="grid grid-cols-1 @sm/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3"
+                        data-list-sensibilities=""
+                    ></ul>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Sprites
+                    </summary>
+                    <div class="mt-3 grid gap-2 grid-flow-col-dense" data-sprites-container>
+                    </div>
+                </details>
+                <details class="mt-3" data-testid="forms">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Formes <span data-nb-forms></span>
+                    </summary>
+                    <ul
+                        class="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-1"
+                        data-list-forms=""
+                    ></ul>
+                </details>
+                <details class="mt-3" data-testid="regional-forms">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Formes régionales <span data-nb-regional-forms></span>
+                    </summary>
+                    <ul
+                        class="grid grid-cols-2 sm:grid-cols-3"
+                        data-list-regional-forms=""
+                    ></ul>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Apparitions <span data-nb-games></span>
+                    </summary>
+                    <ul
+                        class="columns-1 sm:columns-2 md:columns-3 list-inside list-disc"
+                        data-list-games=""
+                    ></ul>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Audio du cri
+                    </summary>
+                    <div data-spectre-cry id="waveform"></div>                    
+                    <button class="mt-3 rounded-md py-1 px-2 transition-colors hocus:bg-white hocus:text-black border border-black border-solid bg-slate-950 text-white ease-out cursor-pointer" id="play-cry">Play</button>
+                </details>
+                <details class="mt-3">
+                    <summary class="hocus:marker:text-(color:--bg-modal-color) font-bold text-xl">
+                        Numéros en fonction des régions <span data-nb-numbers></span>
+                    </summary>
+                    <ul class="columns-1 sm:columns-2 md:columns-3 list-inside list-disc" data-regional-numbers></ul>                    
+                </details>
             </div>
             <div class="px-4 md:hidden grid grid-flow-col">
                 <div data-sex-label="male" class="">
