@@ -341,6 +341,12 @@ export const observeURL = async () => {
             await loadPokemonData(pkmnData);
             modal.showModal();
             
+    
+             
+            console.log("Nom personnalisé"+pkmnData.name.fr);
+
+            fetchCardData(pkmnData.name.fr);
+            
             for(let i=2; i<=pkmnData.generation; i++) {
                 await loadPokedexForGeneration(i);
             }
@@ -404,3 +410,68 @@ if (window.innerWidth > 1024) {
   } else { 
     document.querySelector('.mobile-version').style.display = 'block';
   }
+
+/**
+ * Get Pkemon data in french
+ */
+
+
+async function fetchCardData(pokemonName) {
+    const apiUrl = `https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(pokemonName)}`;
+    const api2Url = `https://assets.tcgdex.net/en/swsh/swsh3/136/{quality}.{extension}`;
+
+    console.log("URL de l'API :", apiUrl);
+
+    if (!pokemonName) {
+        console.error("Le nom du Pokémon est requis.");
+        return;
+    }
+
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Données retournées :", data);
+
+        const cardContainer = document.getElementById('card-container');
+        if (!cardContainer) {
+            console.error("Le conteneur #card-container est introuvable.");
+            return;
+        }
+
+        cardContainer.innerHTML = '';
+
+        if (data.length === 0) {
+            cardContainer.innerHTML = `<p class="text-gray-500">Aucune carte trouvée pour ce Pokémon.</p>`;
+            return;
+        }
+
+        data.forEach((card) => {
+    // Ajoutez le suffixe requis pour l'image
+    const imageUrl = card.image ? `${card.image}/high.png` : 'https://via.placeholder.com/150';
+
+    const cardElement = document.createElement('div');
+    cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
+
+    cardElement.innerHTML = `
+        <img src="${imageUrl}" alt="${card.name}" class="w-full h-auto mb-2 rounded">
+        <h3 class="font-bold text-lg">${card.name}</h3>
+        <p class="text-sm text-gray-600">ID: ${card.localId}</p>
+    `;
+
+    cardContainer.appendChild(cardElement);
+});
+
+    } catch (error) {
+        console.error('Erreur de récupération des données :', error);
+
+        const cardContainer = document.getElementById('card-container');
+        if (cardContainer) {
+            cardContainer.innerHTML = `<p class="text-red-500">Impossible de charger les cartes TCG.</p>`;
+        }
+    }
+}
