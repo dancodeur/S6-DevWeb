@@ -218,7 +218,7 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
 
         generationRange.textContent = `${String(firstPkmnId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ➜ ${
             String(nonRegionalPokedexData.at(-1).pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')
-        }`;
+            }`;
 
         const fetchPriorityHighThreshold = 20;
         const url = new URL(window.location);
@@ -243,7 +243,7 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
 
             const encodedData = window.btoa(
                 loadingImageRaw.replaceAll(
-                    "#037ef3", 
+                    "#037ef3",
                     window.getComputedStyle(document.body).getPropertyValue(`--type-${cleanString(item.types[0].name)}`)
                 )
             );
@@ -256,7 +256,12 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
                 index <= fetchPriorityHighThreshold ? "high" : "low";
 
             const pkmnNameContainer = clone.querySelector("[data-pkmn-name]")
-            pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr} \n ${item.name.en} \n ${item.name.jp}`;
+            pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr}`;
+
+            const pkmnTypesContainer = clone.querySelector("[data-pkmn-types]")
+            pkmnTypesContainer.textContent = item.types[1]
+                ? `${item.types[0].name} & ${item.types[1].name}`
+                : item.types[0].name
 
             const aTag = clone.querySelector("[data-pokemon-data]");
             aTag.href = url;
