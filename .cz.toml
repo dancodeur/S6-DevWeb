@@ -1,5 +1,5 @@
 [tool.commitizen]
-version = "2.0.0"
+version = "2.1.1"
 update_changelog_on_bump = true
 version_files = ["package.json"]
 tag_format = "v$version"
