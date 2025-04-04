@@ -647,3 +647,12 @@ details {
     font-size: 0.875rem;
     color: #6b7280;
 }
+
+
+[data-pokedex].grid-cols-3 [data-pkmn-types] {
+    display: none;
+}
+
+[data-pokedex].grid-cols-1 [data-pkmn-types] {
+    display: block;
+}

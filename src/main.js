@@ -256,13 +256,43 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
             imgTag.fetchPriority =
                 index <= fetchPriorityHighThreshold ? "high" : "low";
 
-            const pkmnNameContainer = clone.querySelector("[data-pkmn-name]")
+
+
+            // Afficher Pokemon_id + types en mode liste
+            const pkmnTypesContainer = clone.querySelector("[data-pkmn-types]");
+            const pkmnNameContainer = clone.querySelector("[data-pkmn-name]");
             pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr}`;
 
-            const pkmnTypesContainer = clone.querySelector("[data-pkmn-types]")
-            pkmnTypesContainer.textContent = item.types[1]
-                ? `${item.types[0].name} & ${item.types[1].name}`
-                : item.types[0].name
+            pkmnTypesContainer.innerHTML = "";
+            
+            const isGridLayout = localStorage.getItem("is_grid_layout") === "true";
+            if (!isGridLayout) {
+                item.types.forEach((type, idx) => {
+                    const li = document.createElement("li");
+                    li.textContent = type.name;
+                    li.setAttribute("aria-label", `Type ${idx + 1} ${type.name}`);
+                    li.classList.add(
+                        "py-0.5", "px-2", "rounded-md", "gap-1", "flex", "items-center", "type-name", "w-fit"
+                    );
+                    li.style.backgroundColor = `var(--type-${cleanString(type.name)})`;
+        
+                    const imgTag = document.createElement("img");
+                    imgTag.alt = `icône type ${type.name}`;
+                    replaceImage(imgTag, type.image);
+            
+                    const encodedData = window.btoa(loadingImageRaw.replaceAll("#037ef3", "#fff"));
+                    imgTag.src = `data:image/svg+xml;base64,${encodedData}`;
+            
+                    imgTag.fetchpriority = "low";
+                    imgTag.loading = "lazy";
+                    imgTag.classList.add("h-5");
+            
+                    li.prepend(imgTag);
+                    pkmnTypesContainer.append(li);
+                });
+            }
+            updatePokedexLayout(isGridLayout);
+            
 
             const aTag = clone.querySelector("[data-pokemon-data]");
             aTag.href = url;
@@ -340,10 +370,10 @@ export const observeURL = async () => {
             pkmnData.alternate_form_id = urlParams.get("alternate_form_id");
 
             await loadPokemonData(pkmnData);
-            modal.showModal();    
+            modal.showModal();
 
             fetchCardData(pkmnData.name.fr);
-            
+
             for(let i=2; i<=pkmnData.generation; i++) {
                 await loadPokedexForGeneration(i);
             }
@@ -402,11 +432,11 @@ window.addEventListener("offline", () => {
 export { loadPokedexForGeneration };
 
 //Responsive button info
-if (window.innerWidth > 1024) { 
+if (window.innerWidth > 1024) {
     document.querySelector('.desktop-version').style.display = 'block';
-  } else { 
+} else {
     document.querySelector('.mobile-version').style.display = 'block';
-  }
+}
 
 /**
  * Get Pkemon data in french
@@ -445,20 +475,20 @@ async function fetchCardData(pokemonName) {
         }
 
         data.forEach((card) => {
-    // Ajoutez le suffixe requis pour l'image
-    const imageUrl = card.image ? `${card.image}/high.png` : 'https://via.placeholder.com/150';
+            // Ajoutez le suffixe requis pour l'image
+            const imageUrl = card.image ? `${card.image}/high.png` : 'https://via.placeholder.com/150';
 
-    const cardElement = document.createElement('div');
-    cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
 
-    cardElement.innerHTML = `
+            cardElement.innerHTML = `
         <img src="${imageUrl}" alt="${card.name}" class="w-full h-auto mb-2 rounded">
         <h3 class="font-bold text-lg">${card.name}</h3>
         <p class="text-sm text-gray-600">ID: ${card.localId}</p>
     `;
 
-    cardContainer.appendChild(cardElement);
-});
+            cardContainer.appendChild(cardElement);
+        });
 
     } catch (error) {
         console.error('Erreur de récupération des données :', error);
@@ -479,9 +509,6 @@ const displayCollaborators = async () => {
 
     try {
         const collaborators = await getCollaborators(owner, repo);
-
-        if (collaborators.length === 0) {
-        }
 
         const userPromises = collaborators.map(async (collaborator) => {
             const userDetails = await getUserDetails(collaborator.login);
