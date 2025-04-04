@@ -4,6 +4,7 @@ import {
 } from "#api";
 
 import loadPokemonData from "./pokemon-modal";
+import { getCollaborators, getUserDetails } from './api/listmembers';
 import {
     replaceImage,
     cleanString,
@@ -255,13 +256,43 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
             imgTag.fetchPriority =
                 index <= fetchPriorityHighThreshold ? "high" : "low";
 
-            const pkmnNameContainer = clone.querySelector("[data-pkmn-name]")
+
+
+            // Afficher Pokemon_id + types en mode liste
+            const pkmnTypesContainer = clone.querySelector("[data-pkmn-types]");
+            const pkmnNameContainer = clone.querySelector("[data-pkmn-name]");
             pkmnNameContainer.textContent = `#${String(item.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}\n${item.name.fr}`;
 
-            const pkmnTypesContainer = clone.querySelector("[data-pkmn-types]")
-            pkmnTypesContainer.textContent = item.types[1]
-                ? `${item.types[0].name} & ${item.types[1].name}`
-                : item.types[0].name
+            pkmnTypesContainer.innerHTML = "";
+            
+            const isGridLayout = localStorage.getItem("is_grid_layout") === "true";
+            if (!isGridLayout) {
+                item.types.forEach((type, idx) => {
+                    const li = document.createElement("li");
+                    li.textContent = type.name;
+                    li.setAttribute("aria-label", `Type ${idx + 1} ${type.name}`);
+                    li.classList.add(
+                        "py-0.5", "px-2", "rounded-md", "gap-1", "flex", "items-center", "type-name", "w-fit"
+                    );
+                    li.style.backgroundColor = `var(--type-${cleanString(type.name)})`;
+        
+                    const imgTag = document.createElement("img");
+                    imgTag.alt = `icône type ${type.name}`;
+                    replaceImage(imgTag, type.image);
+            
+                    const encodedData = window.btoa(loadingImageRaw.replaceAll("#037ef3", "#fff"));
+                    imgTag.src = `data:image/svg+xml;base64,${encodedData}`;
+            
+                    imgTag.fetchpriority = "low";
+                    imgTag.loading = "lazy";
+                    imgTag.classList.add("h-5");
+            
+                    li.prepend(imgTag);
+                    pkmnTypesContainer.append(li);
+                });
+            }
+            updatePokedexLayout(isGridLayout);
+            
 
             const aTag = clone.querySelector("[data-pokemon-data]");
             aTag.href = url;
@@ -341,9 +372,8 @@ export const observeURL = async () => {
             await loadPokemonData(pkmnData);
             modal.showModal();
 
-            // // await fetchCardData(pkmnData.name.fr);
-            // console.log(pkmnData.pokedex_id);
-            
+            fetchCardData(pkmnData.name.fr);
+
             for(let i=2; i<=pkmnData.generation; i++) {
                 await loadPokedexForGeneration(i);
             }
@@ -402,73 +432,104 @@ window.addEventListener("offline", () => {
 export { loadPokedexForGeneration };
 
 //Responsive button info
-if (window.innerWidth > 1024) { 
+if (window.innerWidth > 1024) {
     document.querySelector('.desktop-version').style.display = 'block';
-  } else { 
+} else {
     document.querySelector('.mobile-version').style.display = 'block';
-  }
+}
 
 /**
  * Get Pkemon data in french
  */
 
 
-// async function fetchCardData(pokemonName) {
-//     const apiUrl = `https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(pokemonName)}`;
-//     const api2Url = `https://assets.tcgdex.net/en/swsh/swsh3/136/{quality}.{extension}`;
+async function fetchCardData(pokemonName) {
+    const apiUrl = `https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(pokemonName)}`;
+    const api2Url = `https://assets.tcgdex.net/en/swsh/swsh3/136/{quality}.{extension}`;
 
-//     console.log("URL de l'API :", apiUrl);
+    if (!pokemonName) {
+        console.error("Le nom du Pokémon est requis.");
+        return;
+    }
 
-//     if (!pokemonName) {
-//         console.error("Le nom du Pokémon est requis.");
-//         return;
-//     }
+    try {
+        const response = await fetch(apiUrl);
 
-//     try {
-//         const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+        }
 
-//         if (!response.ok) {
-//             throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
-//         }
+        const data = await response.json();
 
-//         const data = await response.json();
-//         console.log("Données retournées :", data);
+        const cardContainer = document.getElementById('card-container');
+        if (!cardContainer) {
+            console.error("Le conteneur #card-container est introuvable.");
+            return;
+        }
 
-//         const cardContainer = document.getElementById('card-container');
-//         if (!cardContainer) {
-//             console.error("Le conteneur #card-container est introuvable.");
-//             return;
-//         }
+        cardContainer.innerHTML = '';
 
-//         cardContainer.innerHTML = '';
+        if (data.length === 0) {
+            cardContainer.innerHTML = `<p class="text-gray-500">Aucune carte trouvée pour ce Pokémon.</p>`;
+            return;
+        }
 
-//         if (data.length === 0) {
-//             cardContainer.innerHTML = `<p class="text-gray-500">Aucune carte trouvée pour ce Pokémon.</p>`;
-//             return;
-//         }
+        data.forEach((card) => {
+            // Ajoutez le suffixe requis pour l'image
+            const imageUrl = card.image ? `${card.image}/high.png` : 'https://via.placeholder.com/150';
 
-//         data.forEach((card) => {
-//     // Ajoutez le suffixe requis pour l'image
-//     const imageUrl = card.image ? `${card.image}/high.png` : 'https://via.placeholder.com/150';
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
 
-//     const cardElement = document.createElement('div');
-//     cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
+            cardElement.innerHTML = `
+        <img src="${imageUrl}" alt="${card.name}" class="w-full h-auto mb-2 rounded">
+        <h3 class="font-bold text-lg">${card.name}</h3>
+        <p class="text-sm text-gray-600">ID: ${card.localId}</p>
+    `;
 
-//     cardElement.innerHTML = `
-//         <img src="${imageUrl}" alt="${card.name}" class="w-full h-auto mb-2 rounded">
-//         <h3 class="font-bold text-lg">${card.name}</h3>
-//         <p class="text-sm text-gray-600">ID: ${card.localId}</p>
-//     `;
+            cardContainer.appendChild(cardElement);
+        });
 
-//     cardContainer.appendChild(cardElement);
-// });
+    } catch (error) {
+        console.error('Erreur de récupération des données :', error);
 
-//     } catch (error) {
-//         console.error('Erreur de récupération des données :', error);
+        const cardContainer = document.getElementById('card-container');
+        if (cardContainer) {
+            cardContainer.innerHTML = `<p class="text-red-500">Impossible de charger les cartes TCG.</p>`;
+        }
+    }
+}
 
-//         const cardContainer = document.getElementById('card-container');
-//         if (cardContainer) {
-//             cardContainer.innerHTML = `<p class="text-red-500">Impossible de charger les cartes TCG.</p>`;
-//         }
-//     }
-// }
+const owner = 'dancodeur';
+const repo = 'S6-DevWeb';
+
+const displayCollaborators = async () => {
+    const container = document.getElementById('collaborators-list');
+    container.innerHTML = 'Chargement...';
+
+    try {
+        const collaborators = await getCollaborators(owner, repo);
+
+        const userPromises = collaborators.map(async (collaborator) => {
+            const userDetails = await getUserDetails(collaborator.login);
+            if (userDetails) {
+                return `
+                    <div>
+                        <a href="${userDetails.html_url}" target="_blank">
+                            ${userDetails.name || 'Nom inconnu'} (${userDetails.login})
+                        </a>
+                    </div>
+                `;
+            }
+            return '';
+        });
+
+        const usersHtml = await Promise.all(userPromises);
+        container.innerHTML = usersHtml.join('');
+    } catch (error) {
+        console.error('Erreur lors du chargement des collaborateurs:', error);
+        container.innerHTML = '<p>Erreur lors du chargement des collaborateurs.</p>';
+    }
+};
+
+await displayCollaborators ();
