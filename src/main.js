@@ -4,6 +4,7 @@ import {
 } from "#api";
 
 import loadPokemonData from "./pokemon-modal";
+import { getCollaborators, getUserDetails } from './api/listmembers';
 import {
     replaceImage,
     cleanString,
@@ -339,11 +340,7 @@ export const observeURL = async () => {
             pkmnData.alternate_form_id = urlParams.get("alternate_form_id");
 
             await loadPokemonData(pkmnData);
-            modal.showModal();
-            
-    
-             
-            console.log("Nom personnalisé"+pkmnData.name.fr);
+            modal.showModal();    
 
             fetchCardData(pkmnData.name.fr);
             
@@ -420,8 +417,6 @@ async function fetchCardData(pokemonName) {
     const apiUrl = `https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(pokemonName)}`;
     const api2Url = `https://assets.tcgdex.net/en/swsh/swsh3/136/{quality}.{extension}`;
 
-    console.log("URL de l'API :", apiUrl);
-
     if (!pokemonName) {
         console.error("Le nom du Pokémon est requis.");
         return;
@@ -435,7 +430,6 @@ async function fetchCardData(pokemonName) {
         }
 
         const data = await response.json();
-        console.log("Données retournées :", data);
 
         const cardContainer = document.getElementById('card-container');
         if (!cardContainer) {
@@ -475,3 +469,40 @@ async function fetchCardData(pokemonName) {
         }
     }
 }
+
+const owner = 'dancodeur';
+const repo = 'S6-DevWeb';
+
+const displayCollaborators = async () => {
+    const container = document.getElementById('collaborators-list');
+    container.innerHTML = 'Chargement...';
+
+    try {
+        const collaborators = await getCollaborators(owner, repo);
+
+        if (collaborators.length === 0) {
+        }
+
+        const userPromises = collaborators.map(async (collaborator) => {
+            const userDetails = await getUserDetails(collaborator.login);
+            if (userDetails) {
+                return `
+                    <div>
+                        <a href="${userDetails.html_url}" target="_blank">
+                            ${userDetails.name || 'Nom inconnu'} (${userDetails.login})
+                        </a>
+                    </div>
+                `;
+            }
+            return '';
+        });
+
+        const usersHtml = await Promise.all(userPromises);
+        container.innerHTML = usersHtml.join('');
+    } catch (error) {
+        console.error('Erreur lors du chargement des collaborateurs:', error);
+        container.innerHTML = '<p>Erreur lors du chargement des collaborateurs.</p>';
+    }
+};
+
+await displayCollaborators ();
