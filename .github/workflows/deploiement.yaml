@@ -113,5 +113,5 @@ jobs:
         run: ssh -i ~/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} "mkdir -p ~/master"
       - name: Deploy to Alwaysdata via rsync
         run: |
-          rsync -Pavz --exclude-from='rsync-exclude.txt' -e "ssh -i ~/deploy_key -o StrictHostKeyChecking=no" ${{ github.workspace }}/ ${{ secrets.USER }}@${{ secrets.SERVER }}:~/master
+          rsync -Pavz -e "ssh -i ~/deploy_key -o StrictHostKeyChecking=no" ${{ github.workspace }}/ ${{ secrets.USER }}@${{ secrets.SERVER }}:~/master
       # ssh -i ~/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} "mkdir -p ~/${{ steps.path.outputs.path }}"
