@@ -102,6 +102,8 @@ const modal_DOM = {
     spectreCry: modal.querySelector("[data-spectre-cry]"),
     regionalNumbers: modal.querySelector("[data-regional-numbers]"),
     nbNumbers: modal.querySelector("[data-nb-numbers]"),
+    /**Card container */
+    cardContainer : modal.querySelector("[data-card-container]"),
 
 }; 
 
@@ -340,11 +342,15 @@ displayModal = async (pkmnData) => {
 
         listAbilitiesCache = Array.from(new Set(listAbilitiesCache.map((item) => JSON.stringify(item)))).map((item) => JSON.parse(item));
 
+        console.log("fetchCardData", pkmnData.name.fr);
+         fetchCardData(pkmnData.name.fr);
+        // clearTagContent(modal_DOM.cardContainer);
+
         dataCache[pkmnId] = {
             descriptions: listDescriptions,
             extras: pkmnExtraData,
             evolutionLine,
-            listAbilities,
+            listAbilities
         };
     }
     
@@ -943,6 +949,65 @@ displayModal = async (pkmnData) => {
     modal.inert = false;
     modal.setAttribute("aria-busy", false);
 };
+
+/**
+ * Get Pkemon data in french
+ */
+
+async function fetchCardData(pokemonId) {
+    const api2Url = `https://api.tcgdex.net/v2/en/cards?name=${encodeURIComponent(pokemonId)}`;
+
+    if (!pokemonId) {
+        console.error("Le nom du Pokémon est requis.");
+        return;
+    }
+
+    try {
+        const response = await fetch(api2Url);
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Données retournées :", data);
+
+        
+        if (!modal_DOM.cardContainer) {
+            console.error("Le conteneur #card-container est introuvable.");
+            return;
+        }
+
+        modal_DOM.cardContainer.innerHTML = '';
+
+        if (data.length === 0) {
+            modal_DOM.cardContainer.innerHTML = `<p class="text-gray-500">Aucune carte trouvée pour ce Pokémon.</p>`;
+            return;
+        }
+
+        data.forEach((card) => {
+    // Ajoutez le suffixe requis pour l'image
+    const imageUrl = card.image ? `${card.image}/high.png` : 'https://placehold.co/400';
+
+    const cardElement = document.createElement('div');
+    cardElement.classList.add('card', 'p-2', 'border', 'rounded', 'shadow-md', 'bg-white', 'mb-4');
+
+    cardElement.innerHTML = `
+        <img src="${imageUrl}" alt="${card.name}"/>
+    `;
+
+    modal_DOM.cardContainer.appendChild(cardElement);
+});
+
+    } catch (error) {
+        console.error('Erreur de récupération des données :', error);
+
+        if (modal_DOM.cardContainer) {
+            modal_DOM.cardContainer.innerHTML = `<p class="text-red-500">Impossible de charger les cartes TCG.</p>`;
+        }
+    }
+}
+
 
 window.addEventListener("pokedexLoaded", () => {
     if(!modal.open) {
