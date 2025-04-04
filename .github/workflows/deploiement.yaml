@@ -110,7 +110,8 @@ jobs:
             echo "path=www/${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
       - name: Create directory
-        run: ssh -i ~/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} "mkdir -p ~/www/master"
+        run: |
+          ssh -i ~/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} "mkdir -p ~/www/master"
       - name: Deploy to Alwaysdata via rsync
         run: |
           rsync -Pavz -e "ssh -i ~/deploy_key -o StrictHostKeyChecking=no" ${{ github.workspace }}/ ${{ secrets.USER }}@${{ secrets.SERVER }}:~/www/master
