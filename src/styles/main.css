@@ -626,17 +626,11 @@ details {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    background-color: #ffffff;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-#card-container .card img {
+/* #card-container .card img {
     max-width: 100%;
     height: auto;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
 }
 #card-container .card h3 {
     font-size: 1rem;
@@ -646,4 +640,4 @@ details {
 #card-container .card p {
     font-size: 0.875rem;
     color: #6b7280;
-}
+} */
