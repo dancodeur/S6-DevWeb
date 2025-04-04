@@ -955,7 +955,6 @@ displayModal = async (pkmnData) => {
  */
 
 async function fetchCardData(pokemonId) {
-    // const apiUrl = `https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(pokemonName)}`;
     const api2Url = `https://api.tcgdex.net/v2/en/cards?name=${encodeURIComponent(pokemonId)}`;
 
     if (!pokemonId) {
