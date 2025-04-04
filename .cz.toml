@@ -1,0 +1,6 @@
+[tool.commitizen]
+version = "1.4.0"
+update_changelog_on_bump = true
+version_files = ["package.json"]
+tag_format = "v$version"
+bump_message = "release $current_version → $new_version [skip-ci]"
