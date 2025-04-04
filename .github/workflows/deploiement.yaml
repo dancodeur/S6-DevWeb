@@ -109,6 +109,8 @@ jobs:
           else
             echo "path=www/${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
+      - name: Create directory
+        run: mkdir -p ~/www/master
       - name: Deploy to Alwaysdata via rsync
         run: |
           ssh -i ~/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} "mkdir -p ~/${{ steps.path.outputs.path }}"
