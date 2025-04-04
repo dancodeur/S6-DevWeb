@@ -480,9 +480,6 @@ const displayCollaborators = async () => {
     try {
         const collaborators = await getCollaborators(owner, repo);
 
-        if (collaborators.length === 0) {
-        }
-
         const userPromises = collaborators.map(async (collaborator) => {
             const userDetails = await getUserDetails(collaborator.login);
             if (userDetails) {
