@@ -68,6 +68,20 @@ window.addEventListener("DOMContentLoaded", () => {
         formData.append("jeu", jeuNom);
 
         result.textContent = `Fichier prêt : ${sanitizedFilename}`;
+
+        fetch("../public/upload.php", {
+            method: "POST",
+            body: formData,
+        })
+        .then(res => res.text())
+        .then(msg => {
+            result.textContent = msg;
+        })
+        .catch(err => {
+            result.textContent = "Erreur : " + err.message;
+        });
+        
     });
+    
 });
 
