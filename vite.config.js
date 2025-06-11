@@ -20,7 +20,11 @@ export default defineConfig({
     build: {
         target: "esnext",
         rollupOptions: {
-            input: ["src/index.html"],
+            input: [
+                "src/index.html",
+                "src/credits.html",
+                "src/jaquettes.html"
+              ],
         },
     },
     define: {

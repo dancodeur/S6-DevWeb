@@ -143,3 +143,6 @@ dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Configuration db sql
+config.php
